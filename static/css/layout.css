@@ -1,0 +1,62 @@
+body{
+	padding: 0;
+	margin: 0;
+	font-size: 20px;
+	font-family: Tahoma, Geneva, sans-serif;
+	background-image: url('../img/fabric.jpg');
+}
+#main{
+	height: 100%;
+	width: 100%;
+	color: #fff;
+	padding-top: 1em;
+}
+
+
+
+#main a{
+	width: 40%;
+	float: left;
+}
+#main img{
+	max-width: 150px;
+	max-height: 150px;
+}
+
+
+#main a
+{
+	color: #000;
+	
+	font-size: 1.5em;
+	display: block;
+	margin: 2.5%;
+	padding: 2.5%;
+	text-decoration: none;
+	border-radius: .5em;
+	
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: inset 2px 1px 5px rgba(0,0,0,0.5);
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+	border-bottom: 1px solid rgba(0,0,0,0.25);
+
+
+	background-image: linear-gradient(bottom, rgb(180,181,177) 1%, rgb(235,230,235) 51%);
+	background-image: -o-linear-gradient(bottom, rgb(180,181,177) 1%, rgb(235,230,235) 51%);
+	background-image: -moz-linear-gradient(bottom, rgb(180,181,177) 1%, rgb(235,230,235) 51%);
+	background-image: -webkit-linear-gradient(bottom, rgb(180,181,177) 1%, rgb(235,230,235) 51%);
+	background-image: -ms-linear-gradient(bottom, rgb(180,181,177) 1%, rgb(235,230,235) 51%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.01, rgb(180,181,177)),
+		color-stop(0.51, rgb(235,230,235))
+	);
+}
+
+#answers a.disabled{
+	opacity: 0.4;
+}
+
