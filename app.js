@@ -55,11 +55,10 @@ io.sockets.on('connection', function (socket) {
         
     }, 3000);
     
-    
-	socket.on('click', function(data){
-	});
 	socket.on('hello', function(data){
-	    socket.emit('hello', { lastHeard: -1 })
+	    if (typeof data.myIp !== 'undefined'){
+	        address = data.myIp;
+	    }
 	});
 	
 	socket.on('report', function(data){

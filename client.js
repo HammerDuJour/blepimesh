@@ -11,7 +11,7 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./data/client.db');
 
 
-var myIp = process.argv[1];
+var myIp = process.argv[2];
 var lastHeard;
 var intervalTimer;
 
@@ -25,12 +25,6 @@ socket.on('connect', function () {
     
     socket.emit('hello', { ip: myIp });
     
-    socket.on('hello', function(data){
-        lastHeard = data.lastHeard;
-        
-        console.log('got hello back');
-        console.log(data);
-    });
     
     socket.on('report', function(data){
         if (typeof data.lastHeard !== 'undefined'){
@@ -42,7 +36,6 @@ socket.on('connect', function () {
     });
 });
 
-//socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
 
 function fakeDataPayload(){
     return {
@@ -51,7 +44,7 @@ function fakeDataPayload(){
         temp: randomIntFromInterval(40,90),
         ambTemp: randomIntFromInterval(40,90),
         tagAddr: 'BE:3F:20:CA:23',
-        ipAddr: '127.0.0.1'
+        ipAddr: myIp
     };
 }
 
