@@ -4,7 +4,7 @@ var io = require('socket.io-client'),
         all: require('./config/all.js'),
         node: require('./config/node.js')
         },
-    socket = io.connect(process.argv[3], {
+    socket = io.connect(process.argv[2], {
         port: config.all.socketServerPort
         });
 
