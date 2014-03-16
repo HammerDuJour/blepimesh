@@ -63,7 +63,7 @@ function mockBlepi(){
 	            d.tagAddr,
 	            d.ipAddr
 	        ]);
-    }, 30000);
+    }, config.all.clientMockSampleInterval);
     
 }
 

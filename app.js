@@ -53,7 +53,7 @@ io.sockets.on('connection', function (socket) {
             }
         });
         
-    }, 3000);
+    }, config.all.serverReportInterval);
     
 	socket.on('hello', function(data){
 	    if (typeof data.myIp !== 'undefined'){
