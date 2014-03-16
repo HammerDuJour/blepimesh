@@ -1,4 +1,5 @@
 var io = require('socket.io-client'),
+    os=require('os'),
     config = { 
         all: require('./config/all.js'),
         node: require('./config/node.js')
@@ -11,7 +12,7 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./data/client.db');
 
 
-var myIp = process.argv[2];
+var myIp = getIpOn(config.all.nicName);
 var lastHeard;
 var intervalTimer;
 
@@ -70,4 +71,28 @@ function mockBlepi(){
 function randomIntFromInterval(min,max)
 {
     return Math.floor(Math.random()*(max-min+1)+min);
+}
+
+
+
+function getIpOn(dev){
+    var output,
+	    ifaces=os.networkInterfaces();
+
+    if (typeof ifaces[dev] === 'undefined'){
+	    throw 'network interface ' + dev + 'doesn\'t seem to exist';
+    }
+
+
+    ifaces[dev].forEach(function(details){
+    	if (details.family=='IPv4') {
+    	    output = details.address;
+    	}
+    });
+
+    if (typeof output === 'undefined'){
+    	throw 'couldnt find your ip on ' + dev;
+    }else{
+    	return output;
+    }
 }
