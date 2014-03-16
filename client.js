@@ -27,6 +27,7 @@ socket.on('connect', function () {
     
     
     socket.on('report', function(data){
+        console.log(data);
         if (typeof data.lastHeard !== 'undefined'){
             db.all("select tagDate, logDate, temp, ambTemp, tagAddr, ipAddr from log where logDate > ?", data.lastHeard, function(err, rows){
                if (err) throw err;
