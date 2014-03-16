@@ -62,7 +62,7 @@ function mockBlepi(){
 	            d.tagAddr,
 	            d.ipAddr
 	        ]);
-    }, 1000);
+    }, 30000);
     
 }
 
