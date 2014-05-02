@@ -63,21 +63,37 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('report', function(data){
 	    if (typeof data.records !== 'undefined'){
-	    data.records.forEach(function(d){
-             db.run('INSERT INTO log (tagDate,logDate,temp,ambTemp,tagAddr,ipAddr) VALUES(?, ?, ?, ?, ?, ?)',
-                 [
-                     d.tagDate,
-                     d.logDate,
-                     d.temp,
-                     d.ambTemp,
-                     d.tagAddr,
-                     d.ipAddr
-                 ]);
-        });
+	        data.records.forEach(function(d){
+                 db.run('INSERT INTO log (tagDate,logDate,temp,ambTemp,tagAddr,ipAddr) VALUES(?, ?, ?, ?, ?, ?)',
+                     [
+                         d.tagDate,
+                         d.logDate,
+                         d.temp,
+                         d.ambTemp,
+                         d.tagAddr,
+                         d.ipAddr
+                     ]);
+            });
         }
 	    console.log('blep received: ');
 	    console.log(data);
+	    if (data.records.length > 0){
+	        io.sockets.emit('update', data);
+        }
 	});
+	
+	socket.on('topFive', function(data){
+        db.all('select * from log order by logDate desc limit 5;', function(err,rows){
+            if (err) throw err;
+            
+            socket.emit('top5Response', { records: rows });
+        });
+	    
+    });
+	
+	socket.on('disconnect', function(){
+	   clearInterval(intervalTimer); 
+    });
 	
 });
 

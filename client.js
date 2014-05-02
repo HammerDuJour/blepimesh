@@ -45,7 +45,7 @@ function fakeDataPayload(){
         logDate: (new Date()).getTime(),
         temp: randomIntFromInterval(40,90),
         ambTemp: randomIntFromInterval(40,90),
-        tagAddr: 'BE:3F:20:CA:23',
+        tagAddr: 'BE:3F:20:CA:' + ['2F','5B','7C'][randomIntFromInterval(0,2)],
         ipAddr: myIp
     };
 }
