@@ -40,26 +40,21 @@ io.sockets.on('connection', function (socket) {
     
     
     //Call for report on regular intervals, only new records.
-    var intervalTimer = setInterval(function(){
-        console.log('getting lastheard');
-        db.get('select max(logDate) as lastHeard from log where ipAddr = ?', address.address, function(err,row){
-            console.log(row);
-            if (typeof row !== 'undefined'){
-                if (row.lastHeard == null){
-                    socket.emit('report', { lastHeard: 0 }); 
-                }else{
-                    socket.emit('report', { lastHeard: row.lastHeard }); 
-                }
-            }
-        });
-        
-    }, config.all.serverReportInterval);
+    //tempFunc();
     
-	socket.on('hello', function(data){
-	    if (typeof data.myIp !== 'undefined'){
-	        address = data.myIp;
-	    }
-	});
+	
+	socket.on('subscribe', function(data){
+        socket.join(data.room);
+        broadcastNodeChange();
+    });
+	socket.on('unsubscribe', function(data){
+        socket.leave(data.room);
+        broadcastNodeChange();
+    });
+    
+    socket.on('roomStatusInit', function(data){
+        broadcastNodeChange();
+    });
 	
 	socket.on('report', function(data){
 	    if (typeof data.records !== 'undefined'){
@@ -86,14 +81,50 @@ io.sockets.on('connection', function (socket) {
         db.all('select * from log order by logDate desc limit 5;', function(err,rows){
             if (err) throw err;
             
-            socket.emit('top5Response', { records: rows });
+            socket.emit('topFiveResponse', { records: rows });
         });
 	    
     });
 	
 	socket.on('disconnect', function(){
-	   clearInterval(intervalTimer); 
+	   //broadcastNodeChange();
+	   //Wait a bit because leave events aren't instantaneous.
+	   setTimeout(broadcastNodeChange, 500);
     });
 	
 });
 
+var tempFunc = function(){
+    var intervalTimer = setInterval(function(){        
+        console.log('getting lastheard');
+        db.get('select max(logDate) as lastHeard from log where ipAddr = ?', address.address, function(err,row){
+            console.log(row);
+            if (typeof row !== 'undefined'){
+                if (row.lastHeard == null){
+                    io.sockets.in('piNodes').emit('report', { lastHeard: 0 }); 
+                }else{
+                    io.sockets.in('piNodes').emit('report', { lastHeard: row.lastHeard }); 
+                }
+            }
+        });
+        
+    }, config.all.serverReportInterval);
+};
+
+
+var nodesPresent = function(){
+    
+};
+
+//Tell the web clients that the pi clients have changed.
+var broadcastNodeChange = function (){
+    io.sockets.in('webNodes').emit('roomChange', 
+        io.sockets.clients('piNodes').map(function( a ) {
+            return { 
+                id: a.id,
+                ip: a.handshake.address.address,
+                port: a.handshake.address.port
+            };
+        })
+    );
+};

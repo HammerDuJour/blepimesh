@@ -18,13 +18,26 @@ var intervalTimer;
 
 
 //pre-flight, remove me:
-mockBlepi();
+//mockBlepi();
 
 
 socket.on('connect', function () { 
     console.log("socket connected"); 
     
-    socket.emit('hello', { ip: myIp });
+    socket.emit('subscribe', { room: 'piNodes' });
+    
+//    socket.emit('hello', { ip: myIp });
+    
+    socket.on('connect_failed', function (data) {
+		console.log('socket connect failed');
+		console.log(data);
+	});
+	
+	socket.on('error', function (data) {
+		console.log('socket error');
+		console.log(data);
+	});
+	
     
     
     socket.on('report', function(data){
