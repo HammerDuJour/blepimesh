@@ -10,18 +10,21 @@ bpm = (function ($) {
 	};
 	
 	var init = function(){
+		$('#status').removeClass('connected').addClass('disconnected').text('not connected');
 		
 		socket = io.connect('http://' + document.location.hostname + ':8081');
 		
 		
 		socket.on('connect', function (data) {
-			console.log('connected to socket');
-			console.log(data);
+			$('#status').removeClass('disconnected').addClass('connected').text('connected');
 			
 			socket.emit('subscribe', { room: 'webNodes' });
             
 		});
 		
+		socket.on('disconnect', function (data){
+			$('#status').removeClass('connected').addClass('disconnected').text('not connected');
+	    });
 		
 		socket.on('connect_failed', function (data) {
 			console.log('socket connect failed');
@@ -58,8 +61,7 @@ bpm = (function ($) {
 	    $.each(data, function(i,v){
 	        $('#roomActivity').append('<tr><td>' + v.ip + ':' + v.port + '</td><td>' + v.id + '</td></tr>');
 	    });
-        $('#roomActivity').append('</table>');	        
-	    
+        $('#roomActivity').append('</table>');
     }
 	
 	var displayUpdate = function(data){
@@ -72,7 +74,6 @@ bpm = (function ($) {
 	                } 
 	            });
 	    });
-	    
     };
 	
 	// Public
