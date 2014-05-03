@@ -28,13 +28,27 @@
 			font-size: 1.8em;
 		}
 		
+		#roomActivity td{
+			padding: .2em 1em;
+		}
+		#status.connected{
+			color: #0f0;
+		}
+		#status.disconnected{
+			color: #f00;
+		}
 		
 	</style>
 </head>
 <body>
 	<div id="main" data-role="page" data-theme="a">
-		<h1>BLEpiMesh</h1>
+		<h1>BLEpiMesh <span id="status"></span></h1>
 		
+		<div>
+			<h2>Nodes List:</h2>
+			<div id="roomActivity">
+			</div>
+		</div>
 		<div>
 			<h2>Recent Activity</h2>
 			<div id="recentActivity">
