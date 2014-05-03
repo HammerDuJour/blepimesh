@@ -18,7 +18,7 @@ var intervalTimer;
 
 
 //pre-flight, remove me:
-//mockBlepi();
+mockBlepi();
 
 
 socket.on('connect', function () { 

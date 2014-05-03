@@ -94,6 +94,35 @@ io.sockets.on('connection', function (socket) {
 	
 });
 
+
+var nextNode = 0;
+//runs an operation on one client, then waits for the next iteration
+var revolver = function(){
+    if (nextNode > (io.sockets.clients('piNodes').length -1)){ nextNode = 0 }
+    if (io.sockets.clients('piNodes').length == 0) return;
+    
+    var node = io.sockets.clients('piNodes')[nextNode];
+    
+    askNodeForReport(node);
+    
+    nextNode++;
+};
+var intervalTimer = setInterval(revolver, config.all.serverReportInterval);
+
+var askNodeForReport = function(socket){
+    db.get('select max(logDate) as lastHeard from log where ipAddr = ?', socket.handshake.address.address, function(err,row){
+        console.log(row);
+        if (typeof row !== 'undefined'){
+            if (row.lastHeard == null){
+                socket.emit('report', { lastHeard: 0 }); 
+            }else{
+                socket.emit('report', { lastHeard: row.lastHeard }); 
+            }
+        }
+    });
+
+};
+
 var tempFunc = function(){
     var intervalTimer = setInterval(function(){        
         console.log('getting lastheard');

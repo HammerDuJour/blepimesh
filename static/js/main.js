@@ -54,9 +54,11 @@ bpm = (function ($) {
 	var roomUpdate = function(data){
 	    console.log(data);
 	    $('#roomActivity').empty();
+        $('#roomActivity').append('<table>');
 	    $.each(data, function(i,v){
-	        $('#roomActivity').prepend('<div>' + v.id + '--' + v.ip + ':' + v.port + '</div>');
+	        $('#roomActivity').append('<tr><td>' + v.ip + ':' + v.port + '</td><td>' + v.id + '</td></tr>');
 	    });
+        $('#roomActivity').append('</table>');	        
 	    
     }
 	
