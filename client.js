@@ -18,8 +18,9 @@ var intervalTimer;
 
 
 //pre-flight, remove me:
-mockBlepi();
-
+if (typeof process.argv[3] !== 'undefined' && process.argv[3] == 'fakeit'){
+    mockBlepi();
+}
 
 socket.on('connect', function () { 
     console.log("socket connected"); 
