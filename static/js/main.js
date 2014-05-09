@@ -65,8 +65,8 @@ bpm = (function ($) {
     }
 	
 	var displayUpdate = function(data){
-	    $.each(data.records, function(i,v){
-	        $('#recentActivity').prepend('<div>' + v.tagAddr + ' -- ' + v.temp + '</div>');
+	    $.each(data, function(i,v){
+	        $('#recentActivity').prepend('<div>' + v.ipAddr + ' -- ' + v.tagAddr + ' -- ' + v.temp + '</div>');
 	        $('#recentActivity div').each(
 	            function(i,v){ 
 	                if (i >= 5) { 

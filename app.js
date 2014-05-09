@@ -62,23 +62,23 @@ io.sockets.on('connection', function (socket) {
                  db.run('INSERT INTO log (tagDate,logDate,temp,ambTemp,tagAddr,ipAddr) VALUES(?, ?, ?, ?, ?, ?)',
                      [
                          d.tagDate,
-                         d.logDate,
+                         (new Date()).getTime(),
                          d.temp,
                          d.ambTemp,
                          d.tagAddr,
-                         d.ipAddr
+                         socket.handshake.address.address
                      ]);
             });
         }
 	    console.log('blep received: ');
 	    console.log(data);
 	    if (data.records.length > 0){
-	        io.sockets.emit('update', data);
+	        io.sockets.emit('update', data.records.slice(1,5));
         }
 	});
 	
 	socket.on('topFive', function(data){
-        db.all('select * from log order by logDate desc limit 5;', function(err,rows){
+        db.all('select * from log order by tagDate desc limit 5;', function(err,rows){
             if (err) throw err;
             
             socket.emit('topFiveResponse', { records: rows });
@@ -110,7 +110,8 @@ var revolver = function(){
 var intervalTimer = setInterval(revolver, config.all.serverReportInterval);
 
 var askNodeForReport = function(socket){
-    db.get('select max(logDate) as lastHeard from log where ipAddr = ?', socket.handshake.address.address, function(err,row){
+    db.get('select max(tagDate) as lastHeard from log where ipAddr = ?', socket.handshake.address.address, function(err,row){
+        //console.log(socket.handshake.address.address);
         console.log(row);
         if (typeof row !== 'undefined'){
             if (row.lastHeard == null){
@@ -126,7 +127,7 @@ var askNodeForReport = function(socket){
 var tempFunc = function(){
     var intervalTimer = setInterval(function(){        
         console.log('getting lastheard');
-        db.get('select max(logDate) as lastHeard from log where ipAddr = ?', address.address, function(err,row){
+        db.get('select max(tagDate) as lastHeard from log where ipAddr = ?', address.address, function(err,row){
             console.log(row);
             if (typeof row !== 'undefined'){
                 if (row.lastHeard == null){
